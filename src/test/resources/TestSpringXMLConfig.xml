@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+          http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+">
+
+    <context:annotation-config/>
+    
+    <bean name="MDWSTest" class="org.socraticgrid.mdwslib.GetNhinDataSource">
+        <property name="siteId" value="102"/>
+        <property name="userId" value="1programmer"/>
+        <property name="password" value="programmer1"/>
+        <property name="mdwsEndpoint" value="http://172.31.5.104/mdws2/EmrSvc.asmx"/>
+        <property name="useMappedDomainsOnly" value="true"/>
+        <property name="domainRemap">
+            <map>
+                <entry key="demographics" value="demo"/>
+                <entry key="Rx" value="meds"/>
+                <entry key="meds" value="meds"/>
+            </map>
+        </property>
+    </bean>
+</beans>
