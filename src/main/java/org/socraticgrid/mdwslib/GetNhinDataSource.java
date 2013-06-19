@@ -1,47 +1,43 @@
 /*
- * ****************************************************************************************************************
- *  *
- *  * Copyright (C) 2013 by Cognitive Medical Systems, Inc (http://www.cognitivemedciine.com)
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance
- *  * with the License. You may obtain a copy of the License at
- *  *
- *  *     http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software distributed under the License is
- *  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and limitations under the License.
- *  *
- *  ****************************************************************************************************************
  *
- * ****************************************************************************************************************
- *  * Socratic Grid contains components to which third party terms apply. To comply with these terms, the following
- *  * notice is provided:
- *  *
- *  * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
- *  * Copyright (c) 2008, Nationwide Health Information Network (NHIN) Connect. All rights reserved.
- *  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that
- *  * the following conditions are met:
- *  *
- *  * - Redistributions of source code must retain the above copyright notice, this list of conditions and the
- *  *     following disclaimer.
- *  * - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  *     following disclaimer in the documentation and/or other materials provided with the distribution.
- *  * - Neither the name of the NHIN Connect Project nor the names of its contributors may be used to endorse or
- *  *     promote products derived from this software without specific prior written permission.
- *  *
- *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
- *  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *  * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- *  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION HOWEVER
- *  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- *  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *  *
- *  * END OF TERMS AND CONDITIONS
- *  *
- *  ****************************************************************************************************************
+ **************************************************************************************************************
+ * Copyright (C) 2013 by Cognitive Medical Systems, Inc
+ * (http://www.cognitivemedciine.com) * * Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance *
+ * with the License. You may obtain a copy of the License at * *
+ * http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by applicable
+ * law or agreed to in writing, software distributed under the License is *
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. * See the License for the specific language
+ * governing permissions and limitations under the License. *
+ **************************************************************************************************************
+ *
+ **************************************************************************************************************
+ * Socratic Grid contains components to which third party terms apply. To comply
+ * with these terms, the following * notice is provided: * * TERMS AND
+ * CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION * Copyright (c) 2008,
+ * Nationwide Health Information Network (NHIN) Connect. All rights reserved. *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that * the following conditions are met:
+ * - Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the *     following disclaimer. * - Redistributions in
+ * binary form must reproduce the above copyright notice, this list of
+ * conditions and the *     following disclaimer in the documentation and/or
+ * other materials provided with the distribution. * - Neither the name of the
+ * NHIN Connect Project nor the names of its contributors may be used to endorse
+ * or *     promote products derived from this software without specific prior
+ * written permission. * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+ * AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED * WARRANTIES, INCLUDING,
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR CONTRIBUTORS BE LIABLE FOR * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, *
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION HOWEVER * CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, * EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. * * END OF TERMS AND CONDITIONS *
+ **************************************************************************************************************
  */
 package org.socraticgrid.mdwslib;
 
@@ -53,35 +49,43 @@ import gov.va.medora.mdws.emrsvc.PatientTO;
 import gov.va.medora.mdws.emrsvc.TaggedText;
 import gov.va.medora.mdws.emrsvc.TaggedTextArray;
 import gov.va.medora.mdws.emrsvc.UserTO;
+
 import java.io.ByteArrayInputStream;
-
-
-import javax.xml.ws.BindingProvider;
-
-
-
-
 import java.io.InputStream;
+
 import java.net.URL;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+
 
 /**
  *
  * @author Jerry Goodnough
  */
-public class GetNhinDataSource implements org.socraticgrid.patientdataservices.DataSource
+public class GetNhinDataSource
+    implements org.socraticgrid.patientdataservices.DataSource
 {
 
-    static private Logger logger = Logger.getLogger(GetNhinDataSource.class.getName());
-    static private String returnStart =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>+"
-            + "<TaggedTextArray xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://mdws.medora.va.gov/EmrSvc\">"
-            + "<count>";
+    private static Logger logger = Logger.getLogger(GetNhinDataSource.class
+            .getName());
+    private static String returnStart =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        "<TaggedTextArray xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://mdws.medora.va.gov/EmrSvc\">" +
+        "<count>";
     private long maximumConnectionLifeTime = 1000 * 300;
+    private Map<String, String> domainRemap;
+    private boolean useMappedDomainsOnly = false;
+    private String password;
+    private String userId;
+    private String mdwsEndpoint;
+    private String siteId;
+    private ServiceInfo serviceInstance;
 
     /**
      * Get the value of maximumConnectionLifeTime in Milliseconds defaults to 5
@@ -103,7 +107,6 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.maximumConnectionLifeTime = maximumConnectionLifeTime;
     }
-    private Map<String, String> domainRemap;
 
     /**
      * Get the value of domainRemap. This map is used to allow external domain
@@ -130,10 +133,9 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.domainRemap = domainRemap;
     }
-    private boolean useMappedDomainsOnly = false;
 
     /**
-     * Get the value of useMappedDomainsOnly
+     * Get the value of useMappedDomainsOnly. When true only domain names set in the DomainRemap will be allowed.
      *
      * @return the value of useMappedDomainsOnly
      */
@@ -151,7 +153,6 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.useMappedDomainsOnly = useMappedDomainsOnly;
     }
-    private String password;
 
     /**
      * Get the value of password
@@ -172,7 +173,6 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.password = password;
     }
-    private String userId;
 
     /**
      * Get the value of userId
@@ -193,7 +193,6 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.userId = userId;
     }
-    private String mdwsEndpoint;
 
     /**
      * Get the value of mdwsEndpoint
@@ -214,7 +213,6 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     {
         this.mdwsEndpoint = mdwsEndpoint;
     }
-    private String siteId;
 
     /**
      * Get the value of siteId
@@ -236,18 +234,27 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         this.siteId = siteId;
     }
 
+    /**
+     *
+     * @param domain
+     * @return
+     */
     @Override
     public boolean isDomainSupported(String domain)
     {
+
         if (this.useMappedDomainsOnly)
         {
+
             if (this.domainRemap != null)
             {
                 return domainRemap.containsKey(domain);
             }
             else
             {
-                logger.warning("GetNHinDataSource bean is configured to require mapped domains, but no mappings exist.");
+                logger.warning(
+                    "GetNHinDataSource bean is configured to require mapped domains, but no mappings exist.");
+
                 return false;
             }
         }
@@ -256,15 +263,16 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
             return true;
         }
     }
-    private ServiceInfo serviceInstance;
 
     private ServiceInfo getService(Properties props)
     {
+
         if (isServiceStale(props))
         {
             serviceInstance = createService(props);
 
         }
+
         return serviceInstance;
     }
 
@@ -275,31 +283,31 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
 
         try
         {
-            URL baseUrl = GetNhinDataSource.class.getResource(".");
-            URL url = new URL(baseUrl, "file:../../../META-INF/wsdl/EmrSvc.asmx.wsdl");
-            EmrSvc emrService = new EmrSvc(url, new QName("http://mdws.medora.va.gov/EmrSvc", "EmrSvc"));
+            URL url = GetNhinDataSource.class.getResource(
+                    "/META-INF/wsdl/EmrSvc.asmx.wsdl");
+            EmrSvc emrService = new EmrSvc(url,
+                    new QName("http://mdws.medora.va.gov/EmrSvc", "EmrSvc"));
             srv.service = emrService.getEmrSvcSoap();
         }
         catch (Exception e)
         {
             logger.severe(e.getMessage());
+
             return null;
         }
-        //Create the service
-        //EmrSvc emrService = new EmrSvc();
-        //Get the Soap Endpoint
+        // Create the service
+        // EmrSvc emrService = new EmrSvc();
+        // Get the Soap Endpoint
 
-
-
-        ((BindingProvider) srv.service).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
-
-        //Bind the Address
         ((BindingProvider) srv.service).getRequestContext().put(
-                BindingProvider.ENDPOINT_ADDRESS_PROPERTY, this.mdwsEndpoint);
-         
-        
-        
-        //Set up user and password
+            BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+
+        // Bind the Address
+        ((BindingProvider) srv.service).getRequestContext().put(
+            BindingProvider.ENDPOINT_ADDRESS_PROPERTY, this.mdwsEndpoint);
+
+
+        // Set up user and password
         if ((props != null) && (props.containsKey("MDWSUserId")))
         {
             srv.userId = props.getProperty("MDWSUserId");
@@ -308,6 +316,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         {
             srv.userId = this.userId;
         }
+
         if ((props != null) && (props.containsKey("MDWSPassword")))
         {
             srv.password = props.getProperty("MDWSPassword");
@@ -323,26 +332,33 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         }
         else
         {
-            logger.warning("Failed MDWS login on endpoint " + this.mdwsEndpoint + " for user " + srv.userId);
+            logger.warning("Failed MDWS login on endpoint " +
+                this.mdwsEndpoint + " for user " + srv.userId);
+
             return null;
         }
     }
 
     private boolean isServiceStale(Properties props)
     {
+
         if (serviceInstance != null)
         {
-            //First we check the time out
-            if ((System.currentTimeMillis() - serviceInstance.lastUsed) > maximumConnectionLifeTime)
+
+            // First we check the time out
+            if ((System.currentTimeMillis() - serviceInstance.lastUsed) >
+                    maximumConnectionLifeTime)
             {
                 return true;
             }
             else
             {
-                //OK Service has been around log enough 
+
+                // OK Service has been around log enough
                 if (props.containsKey("MDWSUserId"))
                 {
                     String propPass = props.getProperty("MDWSUserId");
+
                     if (propPass.compareTo(serviceInstance.userId) != 0)
                     {
                         return true;
@@ -355,6 +371,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
 
             return true;
         }
+
         return false;
     }
 
@@ -369,7 +386,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
     public InputStream getData(String domain, String id, Properties props)
     {
 
-        InputStream result = null;
+
         StringBuilder sb = null;
 
 
@@ -377,15 +394,20 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
 
         if (srvInfo != null)
         {
-            //Check if we need to select the patient
+
+            // Check if we need to select the patient
             if (srvInfo.id.compareTo(id) != 0)
             {
 
                 PatientTO selectedPatient = srvInfo.service.select(id);
+
                 if (selectedPatient.getFault() != null)
                 {
-                    //We can't select the requested patient
-                    logger.warning("MDWS SELECT: PatientId " + id + " not found. Message = " + selectedPatient.getFault().getMessage());
+
+                    // We can't select the requested patient
+                    logger.warning("MDWS SELECT: PatientId " + id +
+                        " not found. Message = " +
+                        selectedPatient.getFault().getMessage());
                     srvInfo.id = "";
                 }
                 else
@@ -393,42 +415,50 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
                     srvInfo.id = id;
                     srvInfo.lastUsed = System.currentTimeMillis();
                 }
-
-
-                if (!srvInfo.id.isEmpty())
-                {
-
-                    String targetDomain = getTargetDomain(domain);
-
-                    if (targetDomain != null)
-                    {
-                        sb = new StringBuilder();
-
-                        TaggedTextArray foundData = srvInfo.service.getNhinData(domain);
-                        logger.fine("TOTAL foundData= " + foundData.getCount());
-                        ArrayOfTaggedText foundDataArray = foundData.getResults();
-                        List<TaggedText> foundDataList = foundDataArray.getTaggedText();
-
-                        sb.append(returnStart);
-                        sb.append(Integer.toString(foundData.getCount()));
-                        sb.append("</count><results>");
-                        sb.append("<TaggedText><tag>");
-                        sb.append(siteId);
-                        sb.append("</tag><text>");
-                        for (TaggedText tag : foundDataList)
-                        {
-                            sb.append(tag.getText());
-                        }
-                        sb.append("</text></TaggedText></results></TaggedTextArray>");
-                    }
-                    else
-                    {
-                        logger.warning("Invalid Domain passed, domain = " + domain);
-                    }
-                }
-
             }
+
+            if (!srvInfo.id.isEmpty())
+            {
+
+                String targetDomain = getTargetDomain(domain);
+
+                if (targetDomain != null)
+                {
+                    sb = new StringBuilder();
+
+                    TaggedTextArray foundData = srvInfo.service.getNhinData(
+                            targetDomain);
+                    logger.fine("TOTAL foundData= " + foundData.getCount());
+
+                    ArrayOfTaggedText foundDataArray = foundData.getResults();
+                    List<TaggedText> foundDataList =
+                        foundDataArray.getTaggedText();
+
+                    sb.append(returnStart);
+                    sb.append(Integer.toString(foundData.getCount()));
+                    sb.append("</count><results>");
+                    sb.append("<TaggedText><tag>");
+                    sb.append(siteId);
+                    sb.append("</tag><text>");
+
+                    for (TaggedText tag : foundDataList)
+                    {
+                        sb.append(tag.getText());
+                    }
+
+                    sb.append(
+                        "</text></TaggedText></results></TaggedTextArray>");
+                    srvInfo.lastUsed = System.currentTimeMillis();
+                }
+                else
+                {
+                    logger.warning("Invalid Domain passed, domain = " + domain);
+                }
+            }
+
         }
+
+
         if (sb == null)
         {
 
@@ -443,6 +473,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
             sb.append("</text></TaggedText></results></TaggedTextArray>");
 
         }
+
         return new ByteArrayInputStream(sb.toString().getBytes());
     }
 
@@ -452,6 +483,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
 
         if (this.useMappedDomainsOnly)
         {
+
             if (this.domainRemap.containsKey(domain))
             {
                 targetDomain = (String) this.domainRemap.get(domain);
@@ -463,6 +495,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         }
         else if (this.domainRemap != null)
         {
+
             if (this.domainRemap.containsKey(domain))
             {
                 targetDomain = (String) this.domainRemap.get(domain);
@@ -476,6 +509,7 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         {
             targetDomain = domain;
         }
+
         return targetDomain;
     }
 
@@ -494,14 +528,17 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         }
         else
         {
-            logger.warning("MDWS CONNECT failed with: " + dataSourceArray.getFault().getStackTrace());
+            logger.warning("MDWS CONNECT failed with: " +
+                dataSourceArray.getFault().getStackTrace());
+
             return false;
         }
 
         // -------
         // LOGIN
         // -------
-        UserTO userTO = serviceInfo.service.login(serviceInfo.userId, serviceInfo.password, "");
+        UserTO userTO = serviceInfo.service.login(serviceInfo.userId,
+                serviceInfo.password, "");
 
         logger.fine("userTO.getName(): " + userTO.getName());
 
@@ -513,9 +550,12 @@ public class GetNhinDataSource implements org.socraticgrid.patientdataservices.D
         }
         else
         {
-            logger.warning("MDWS LOGIN failed with: " + userTO.getFault().getInnerMessage());
+            logger.warning("MDWS LOGIN failed with: " +
+                userTO.getFault().getInnerMessage());
+
             return false;
         }
+
         return true;
     }
 
