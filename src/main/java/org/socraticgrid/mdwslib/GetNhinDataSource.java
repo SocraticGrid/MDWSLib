@@ -353,15 +353,17 @@ public class GetNhinDataSource
             }
             else
             {
-
-                // OK Service has been around log enough
-                if (props.containsKey("MDWSUserId"))
+                if (props != null)
                 {
-                    String propPass = props.getProperty("MDWSUserId");
-
-                    if (propPass.compareTo(serviceInstance.userId) != 0)
+                    // OK Service has been around long enough
+                    if (props.containsKey("MDWSUserId"))
                     {
-                        return true;
+                        String propPass = props.getProperty("MDWSUserId");
+
+                        if (propPass.compareTo(serviceInstance.userId) != 0)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
